@@ -1,4 +1,4 @@
-package com
+package com.global.rq
 
 class Rq(cmd: String) {
     val action: String = cmd.substringBefore("?").trim()
