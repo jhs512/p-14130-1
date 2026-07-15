@@ -6,7 +6,7 @@ fun main() {
     while (true) {
         print("명령) ")
 
-        val input = readlnOrNull()?.trim()
+        val input = readlnOrNull()!!.trim()
 
         if (input == "종료")
             break
