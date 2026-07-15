@@ -2,10 +2,12 @@ package com.standard.util.json
 
 object JsonUtil {
     // JSON 문자열을 Map으로 변환
+    // 값에 쉼표가 포함될 수 있으므로 쉼표가 아닌 줄 단위로 파싱한다(필드는 항상 한 줄에 하나씩 저장됨)
     fun jsonStrToMap(jsonStr: String): Map<String, Any> =
         jsonStr
             .removeSurrounding("{", "}")
-            .split(",")
+            .lines()
+            .map { it.trim().removeSuffix(",") }
             .mapNotNull {
                 val (key, value) = it.split(":", limit = 2).map(String::trim).takeIf { it.size == 2 }
                     ?: return@mapNotNull null
