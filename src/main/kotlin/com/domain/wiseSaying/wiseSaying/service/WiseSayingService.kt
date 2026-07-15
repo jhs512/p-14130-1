@@ -11,6 +11,12 @@ class WiseSayingService {
 
     fun isEmpty(): Boolean = wiseSayingRepository.isEmpty()
 
+    fun findByKeyword(keywordType: String, keyword: String): List<WiseSaying> =
+        when (keywordType) {
+            "author" -> wiseSayingRepository.findByAuthorLike("%$keyword%")
+            else -> wiseSayingRepository.findByContentLike("%$keyword%")
+        }
+
     fun findAll(): List<WiseSaying> = wiseSayingRepository.findAll()
 
     fun findById(id: Int): WiseSaying? = wiseSayingRepository.findById(id)

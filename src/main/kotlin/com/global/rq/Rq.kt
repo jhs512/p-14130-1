@@ -20,6 +20,9 @@ class Rq(cmd: String) {
     fun getParamValue(name: String): String? =
         paramMap[name]
 
+    fun getParamValue(name: String, default: String): String =
+        getParamValue(name) ?: default
+
     fun getParamValueAsInt(name: String, default: Int): Int =
         paramMap[name]?.toIntOrNull() ?: default
 }
