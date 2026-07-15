@@ -26,7 +26,12 @@ class WiseSayingFileRepository : WiseSayingRepository {
 
     override fun findAll(): List<WiseSaying> = wiseSayings
 
-    override fun findById(id: Int): WiseSaying? = wiseSayings.firstOrNull { it.id == id }
+    override fun findById(id: Int): WiseSaying? =
+        tableDirPath
+            .toFile()
+            .listFiles()
+            ?.find { it.name == "$id.json" }
+            ?.let { WiseSaying.fromJsonStr(it.readText()) }
 
     override fun delete(wiseSaying: WiseSaying) {
         wiseSayings.remove(wiseSaying)
@@ -35,6 +40,8 @@ class WiseSayingFileRepository : WiseSayingRepository {
     override fun clear() {
         lastId = 0
         wiseSayings.clear()
+
+        tableDirPath.toFile().deleteRecursively()
     }
 
     private fun saveOnDisk(wiseSaying: WiseSaying) {

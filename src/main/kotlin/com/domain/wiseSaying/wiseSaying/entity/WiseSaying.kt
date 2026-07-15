@@ -1,10 +1,25 @@
 package com.domain.wiseSaying.wiseSaying.entity
 
+import com.standard.util.json.JsonUtil.jsonStrToMap
+
 data class WiseSaying(
+    var id: Int = 0,
     var content: String,
     var author: String,
 ) {
-    var id: Int = 0
+    constructor(content: String, author: String) : this(0, content, author)
+
+    companion object {
+        fun fromJsonStr(jsonStr: String): WiseSaying {
+            val map = jsonStrToMap(jsonStr)
+
+            return WiseSaying(
+                id = map["id"] as Int,
+                content = map["content"] as String,
+                author = map["author"] as String,
+            )
+        }
+    }
 
     fun modify(content: String, author: String) {
         this.content = content
