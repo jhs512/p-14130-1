@@ -1,13 +1,23 @@
 package com.domain.wiseSaying.wiseSaying.controller
 
 import com.TestRunner
+import com.global.app.AppConfig
 import com.global.bean.SingletonScope
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import kotlin.test.Test
 
 class WiseSayingControllerTest {
+    companion object {
+        @JvmStatic
+        @BeforeAll
+        fun beforeAll() {
+            AppConfig.setModeToTest()
+        }
+    }
+
     @BeforeEach
     fun setUp() {
         SingletonScope.wiseSayingRepository.clear()

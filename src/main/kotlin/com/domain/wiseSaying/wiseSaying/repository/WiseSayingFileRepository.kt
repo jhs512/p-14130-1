@@ -2,6 +2,7 @@ package com.domain.wiseSaying.wiseSaying.repository
 
 import com.domain.wiseSaying.wiseSaying.entity.WiseSaying
 import com.global.app.AppConfig
+import com.standard.dto.Page
 import com.standard.util.json.JsonUtil
 import java.nio.file.Path
 
@@ -31,6 +32,7 @@ class WiseSayingFileRepository : WiseSayingRepository {
             ?.filter { it.name.endsWith(".json") }
             ?.map { it.readText() }
             ?.map(WiseSaying.Companion::fromJsonStr)
+            ?.sortedByDescending { it.id }
             .orEmpty()
 
     override fun findById(id: Int): WiseSaying? =
@@ -107,6 +109,34 @@ class WiseSayingFileRepository : WiseSayingRepository {
 
     override fun findByContentLike(contentLike: String): List<WiseSaying> =
         findAll().filterByLike(contentLike) { it.content }
+
+    override fun findAllPaged(itemsPerPage: Int, pageNo: Int): Page<WiseSaying> {
+        val wiseSayings = findAll()
+
+        val content = wiseSayings
+            .drop((pageNo - 1) * itemsPerPage)
+            .take(itemsPerPage)
+
+        return Page(wiseSayings.size, itemsPerPage, pageNo, "", "", content)
+    }
+
+    override fun findByKeywordPaged(
+        keywordType: String,
+        keyword: String,
+        itemsPerPage: Int,
+        pageNo: Int,
+    ): Page<WiseSaying> {
+        val wiseSayings = when (keywordType) {
+            "author" -> findByAuthorLike("%$keyword%")
+            else -> findByContentLike("%$keyword%")
+        }
+
+        val content = wiseSayings
+            .drop((pageNo - 1) * itemsPerPage)
+            .take(itemsPerPage)
+
+        return Page(wiseSayings.size, itemsPerPage, pageNo, keywordType, keyword, content)
+    }
 
     private fun List<WiseSaying>.filterByLike(
         like: String,

@@ -1,6 +1,7 @@
 package com.domain.wiseSaying.wiseSaying.repository
 
 import com.domain.wiseSaying.wiseSaying.entity.WiseSaying
+import com.standard.dto.Page
 
 class WiseSayingMemoryRepository : WiseSayingRepository {
     private var lastId = 0
@@ -17,7 +18,7 @@ class WiseSayingMemoryRepository : WiseSayingRepository {
 
     override fun isEmpty(): Boolean = wiseSayings.isEmpty()
 
-    override fun findAll(): List<WiseSaying> = wiseSayings
+    override fun findAll(): List<WiseSaying> = wiseSayings.reversed()
 
     override fun findById(id: Int): WiseSaying? = wiseSayings.firstOrNull { it.id == id }
 
@@ -33,10 +34,36 @@ class WiseSayingMemoryRepository : WiseSayingRepository {
     override fun build() {}
 
     override fun findByAuthorLike(authorLike: String): List<WiseSaying> =
-        wiseSayings.filterByLike(authorLike) { it.author }
+        findAll().filterByLike(authorLike) { it.author }
 
     override fun findByContentLike(contentLike: String): List<WiseSaying> =
-        wiseSayings.filterByLike(contentLike) { it.content }
+        findAll().filterByLike(contentLike) { it.content }
+
+    override fun findAllPaged(itemsPerPage: Int, pageNo: Int): Page<WiseSaying> {
+        val content = findAll()
+            .drop((pageNo - 1) * itemsPerPage)
+            .take(itemsPerPage)
+
+        return Page(wiseSayings.size, itemsPerPage, pageNo, "", "", content)
+    }
+
+    override fun findByKeywordPaged(
+        keywordType: String,
+        keyword: String,
+        itemsPerPage: Int,
+        pageNo: Int,
+    ): Page<WiseSaying> {
+        val wiseSayings = when (keywordType) {
+            "author" -> findByAuthorLike("%$keyword%")
+            else -> findByContentLike("%$keyword%")
+        }
+
+        val content = wiseSayings
+            .drop((pageNo - 1) * itemsPerPage)
+            .take(itemsPerPage)
+
+        return Page(wiseSayings.size, itemsPerPage, pageNo, keywordType, keyword, content)
+    }
 
     private fun List<WiseSaying>.filterByLike(
         like: String,

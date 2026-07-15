@@ -2,6 +2,7 @@ package com.domain.wiseSaying.wiseSaying.service
 
 import com.domain.wiseSaying.wiseSaying.entity.WiseSaying
 import com.global.bean.SingletonScope
+import com.standard.dto.Page
 
 class WiseSayingService {
     private val wiseSayingRepository = SingletonScope.wiseSayingRepository
@@ -18,6 +19,12 @@ class WiseSayingService {
         }
 
     fun findAll(): List<WiseSaying> = wiseSayingRepository.findAll()
+
+    fun findAllPaged(itemsPerPage: Int, pageNo: Int): Page<WiseSaying> =
+        wiseSayingRepository.findAllPaged(itemsPerPage, pageNo)
+
+    fun findByKeywordPaged(keywordType: String, keyword: String, itemsPerPage: Int, pageNo: Int): Page<WiseSaying> =
+        wiseSayingRepository.findByKeywordPaged(keywordType, keyword, itemsPerPage, pageNo)
 
     fun findById(id: Int): WiseSaying? = wiseSayingRepository.findById(id)
 
