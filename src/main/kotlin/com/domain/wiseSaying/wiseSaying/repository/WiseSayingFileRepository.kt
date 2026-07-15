@@ -9,7 +9,7 @@ class WiseSayingFileRepository : WiseSayingRepository {
         get() = AppConfig.dbDirPath.resolve("wiseSaying")
 
     override fun save(wiseSaying: WiseSaying): WiseSaying {
-        if (wiseSaying.isNew()) wiseSaying.id = loadLastIdAndIncrease()
+        if (wiseSaying.isNew()) wiseSaying.id = genNextId()
 
         saveOnDisk(wiseSaying)
 
@@ -79,9 +79,8 @@ class WiseSayingFileRepository : WiseSayingRepository {
             0
         }
 
-    private fun loadLastIdAndIncrease(): Int {
-        val lastId = loadLastId()
-        saveLastId(lastId + 1)
-        return lastId
-    }
+    private fun genNextId(): Int =
+        (loadLastId() + 1).also {
+            saveLastId(it)
+        }
 }

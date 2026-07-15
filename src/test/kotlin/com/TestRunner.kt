@@ -1,11 +1,16 @@
 package com
 
+import com.global.app.AppConfig
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.io.PrintStream
 
 object TestRunner {
+    init {
+        AppConfig.setModeToTest()
+    }
+
     private val originalIn: InputStream = System.`in`
     private val originalOut: PrintStream = System.out
 
