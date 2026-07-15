@@ -12,4 +12,13 @@ data class WiseSaying(
     }
 
     fun isNew(): Boolean = id == 0
+
+    val jsonStr: String
+        get() = """
+            {
+                "id": $id,
+                "content": "$content",
+                "author": "$author"
+            }
+        """.trimIndent()
 }

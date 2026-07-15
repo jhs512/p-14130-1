@@ -49,3 +49,4 @@ bin/
 .idea/kotlinc.xml
 .idea/ktfmt.xml
 .idea/vcs.xml
+data
